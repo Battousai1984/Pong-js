@@ -100,5 +100,32 @@ var Game = {
         //change the canvas font size and color
         this.context.font = '50px Courier New';
         this.context.fillStyle = this.color;
+
+        //draw rectangle behind 'press any key'
+        this.context.fillRect(
+            this.canvas.width / 2 - 350,
+            this.canvas.height / 2 - 48,
+            700,
+            100
+        );
+
+        //change canvas color
+        this.context.fillStyle = '#ffffff';
+
+        //press any key to begin text
+        this.context.fillStyle('Press any key to begin',
+           this.canvas.width / 2,
+           this.canvas.height / 2 + 15
+        );
+    },
+
+    //update all objects (move the player, paddle, ball, increment the score,etc)
+    update: function () {
+        if (!this.over) {
+            // if the ball collides with the bound limits - correct the x and y coords
+            if (this.ball.x <= 0) Pong._resetTurn.call(this, this.paddle, this.player);
+            if (this.ball.x >= this.canvas.width - this.canvas.width) Pong._resetTurn.call(this, this.player, this.paddle);
+            
+        }
     }
 }
