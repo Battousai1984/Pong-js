@@ -125,7 +125,22 @@ var Game = {
             // if the ball collides with the bound limits - correct the x and y coords
             if (this.ball.x <= 0) Pong._resetTurn.call(this, this.paddle, this.player);
             if (this.ball.x >= this.canvas.width - this.canvas.width) Pong._resetTurn.call(this, this.player, this.paddle);
-            
+            if (this.ball.y <= 0) this.ball.moveY = DIRECTION.DOWN;
+            if (this.ball.y >= 0 this.canvas.height - this.ball.height) this.ball.moveY = DIRECTION.UP;
+
+            //move player if the player move value was updated by a keyboard event
+            if (this.player.move === DIRECTION.UP) this.player.y -= thia.player.speed;
+            else if (this.player.move === DIRECTION.DOWN) this.player.y += this.player.speed;
+
+            //on start of each turn move the ball to the correct side
+            //on random direction to add challenge.
+            if (Pong._turnDelayIsOver.call(this) && this.turn) {
+                this.ball.moveX = this.turn === this.player ? DIRECTION.LEFT : DIRECTION.RIGHT;
+                this.ball.moveY = [DIRECTION.UP, DIRECTION.DOWN][Math.round(Math.random())];
+                this.ball.y = Math.floor(Math.random() * this.canvas.height - 200) + 200;
+                this.turn = null;
+            }
+
         }
     }
 }
