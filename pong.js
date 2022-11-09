@@ -141,6 +141,40 @@ var Game = {
                 this.turn = null;
             }
 
+            //if the player collide with the bound limits, update x and y coords.
+            if (this.player.y <= 0) this.player.y = 0;
+            else if (this.player.y >= (this.canvas.height - this.player.height)) this.player.y = (this.canvas.height - this.player.height);
+            
+            //Move ball in intended direction based on moveY and moveX values
+            if (this.ball.moveY === DIRECTION.UP) this.ball.y -= (this.ball.speed / 1.5);
+            else if (this.ball.moveY === DIRECTION.DOWN) this.ball.y += (this.ball.speed / 1.5);
+            if (this.ball.moveX === DIRECTION.LEFT) this.ball.x -= this.ball.speed;
+            else if (this.ball.moveX === DIRECTION.RIGHT) this.ball.x += this.ball.speed;
+
+            //AI handle paddle UP and DOWN movement
+            if (this.paddle.y > this.ball.y - (this.paddle.height / 2)) {
+                if (this.ball.moveX === DIRECTION.RIGHT) this.paddle.y -= this.paddle.speed / 1.5;
+                else this.paddle.y -= this.paddle.speed / 4;
+            }
+            if (this.paddle.y < this.ball.y - (this.paddle.height / 2)) {
+                if (this.ball.moveX === DIRECTION.RIGHT) this.paddle.y += this.paddle.speed / 1.5;
+                else this.paddle.y += this.paddle.speed / 4;
+            }
+
+            //AI handle paddle wall colissions
+            if (this.paddle.y >= this.canvas.height - this.paddle.height) this.paddle.y = this.canvas.height - this.paddle.height;
+            else if (this.paddle.y <= 0) this.paddle.y = 0;
+
+            //handle player-ball colissions.
+            if (this.ball.x - this.ball.width <= this.player.x && this.ball.x >= this.player.x - this.player.width) {
+                if (this.ball.y <= this.player.y + this.player.height && this.ball.y + this.ball.height >= this.player.y) {
+                    this.ball.x = (this.player.x + this.ball.width);
+                    this.ball.moveX = DIRECTION.RIGHT;
+
+                    beep1.play();
+                }
+            }
+            
         }
     }
 }
