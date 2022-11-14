@@ -174,7 +174,39 @@ var Game = {
                     beep1.play();
                 }
             }
-            
+
+            //handle paddle ball collision
+            if (this.ball.x - this.ball.width <= this.paddle.x && this.ball.x >= this.paddle.x - this.paddle.width) {
+                if (this.ball.y <= this.paddle.y + this.paddle.height && this.ball.y + this.ball.height >= this.paddle.y) {
+                    this.ball.x = (this.paddle.x - this.ball.width);
+                    this.ball.moveX = DIRECTION.LEFT;
+
+                    beep1.play();
+                }
+            }
         }
+
+        //handle end of round transition
+        //check to see if the player won the round.
+        if (this.player.score === rounds[this.round]) {
+            //check to see if there is any more rounds/levels left and display the victory screen if
+            //there are not
+            if (!rounds[this.round + 1]) {
+                this.over = true;
+                setTimeout(function () { Pong.endGameMenu('Winner!'); }, 1000);
+            } else {
+                //if there is another round, reset all the values and increment the round number.
+                this.color = this._generateRoundColor();
+                this.player.score = this.paddle.score = 0;
+                this.player.speed += 0.5;
+                this.paddle.spped += 1;
+                this.ball.speed += 1;
+                this.round += 1;
+
+                beep3.play();
+            }
+        }
+        //check to see if the paddle/AI has won the round.
+        
     }
 }
