@@ -207,6 +207,127 @@ var Game = {
             }
         }
         //check to see if the paddle/AI has won the round.
-        
+        else if (this.paddle.score === rounds[this.round]) {
+            this.over = true;
+            setTimeout(function () { Pong.endGameMenu('Game Over!'); }, 1000);
+        }
+    },
+
+    // Draw the objects to the canvas element
+    draw: function () {
+        //clear canvas
+        this.context.clearRect(
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
+
+        //set the fill style to black
+        this.context.fillStyle = this.color;
+
+        //draw the background
+        this.context.fillRect(
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
+
+        //set the fill style to white (for the paddles and the ball)
+        this.context.fillStyle = '#ffffff';
+
+        //Draw the player
+        this.context.fillRect(
+            this.player.x,
+            this.player.y,
+            this.player.width,
+            this.player.height
+        );
+
+        //Draw the paddle
+        this.context.fillRect(
+            this.paddle.x,
+            this.paddle.y,
+            this.paddle.width,
+            this.paddle.height
+        );
+
+        //draw the ball
+        if (Pong._turnDelayIsOver.call(this)) {
+            this.context.fillRect(
+                this.ball.x,
+                this.ball.y,
+                this.ball.width,
+                this.ball.height
+            );
+        }
+
+        //draw the net
+        this.context.beginPath();
+        this.context.setLineDash([7, 15]);
+        this.context.moveTo((this.canvas.width / 2), this.canvas.height - 140);
+        this.context.lineTo((this.canvas.width / 2), 140);
+        this.context.lineWidth = 10;
+        this.context.strokeStyle = '#ffffff';
+        this.context.stroke();
+
+        //set the default canvas font and align it to the center
+        this.context.font = '100px Courier New';
+        this.context.textAlign = 'center';
+
+        //draw the player score (left)
+        this.context.fillText(
+            this.player.score.toString(),
+            (this.canvas.width / 2) - 300,
+            200
+        );
+
+        //draw the paddles score (right)
+        this.context.fillText(
+            this.paddle.score.toString(),
+            (this.canvas.width / 2) + 300,
+            200
+        );
+
+        // Change the font size for the center score text
+        this.context.font = '30px Courier New';
+
+        //Draw the winning score (center)
+        this.context.fillText(
+            'Round ' + (Pong.round + 1),
+            (this.canvas.width / 2),
+            35 
+        );
+
+        //change the font size for the center score value
+        this.context.font = '40px Courier';
+
+        //draw the current round number
+        this.context.fillText(
+            rounds[Pong.round] ? rounds[Pong.round] : rounds[Pong.round - 1],
+            (this.canvas.width / 2),
+            100
+        );
+    },
+
+    loop: function () {
+        Pong.update();
+        Pong.draw();
+
+        //if the game is not over, draw the next frame
+        if (!Pong.over) requestAnimationFrame(Pong.loop);
+    },
+
+    listen: function () {
+        document.addEventListener('keydown', function (key)) {
+            // handle the 'press any key to begin' function and start the game.
+            if (Pong.running === false) {
+                Pong.running = true;
+                window.requestAnimationFrame(Pong.loop);
+            }
+
+            //handle up arrow and w key events
+        }
     }
 }
