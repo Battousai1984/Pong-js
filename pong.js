@@ -320,7 +320,7 @@ var Game = {
     },
 
     listen: function () {
-        document.addEventListener('keydown', function (key)) {
+        document.addEventListener('keydown', function (key) {
             // handle the 'press any key to begin' function and start the game.
             if (Pong.running === false) {
                 Pong.running = true;
@@ -328,6 +328,38 @@ var Game = {
             }
 
             //handle up arrow and w key events
-        }
+            if (key.keyCode === 38 || key.keyCode === 87) Pong.player.move = DIRECTION.UP;
+
+            //handle down arrow and s key events
+            if (key.keyCode === 40 || key.keyCode === 83) Pong.player.move = DIRECTION.DOWN;
+        });
+
+        //stop the player from moving when there are no keys being pressed
+        document.addEventListener('keyup', function (key) { Pong.player.move = DIRECTION.IDLE; });        
+    },
+
+    //Reset the ball location, the player turns and set a delay before the next round begins
+    _resetTurn: function(victor, loser) {
+        this.ball = Ball.new.call(this, this.ball.speed);
+        this.turn = loser;
+        this.timer = (new Date()).getTime();
+
+        victor.score++;
+        beep2.play();
+    },
+
+    //wait for a delay to have passed after each turn
+    _turnDelayIsOver: function() {
+        return ((new Date()).getTime() - this.timer >= 1000);
+    },
+
+    //select a random color as the background of each level
+    _generateRoundColor: function () {
+        var newColor = colors[Math.floor(Math.random() * colors.lenght)];
+        if (newColor === this.color) return Pong._generateRoundColor();
+        return newColor;
     }
-}
+};
+
+var Pong = Object.assing({}, game);
+Pong.initialize();
